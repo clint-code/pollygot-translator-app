@@ -9,6 +9,6 @@ Build it from scratch (used [TailwindCSS](https://v3.tailwindcss.com/docs/instal
 Setup the OpenAPI (in this case, I used the OpenRouter API) ✅
 Select a model (using meta-llama/llama-3.1-8b-instruct) ✅
 Engineer a prompt ✅
-Use temperature
+Use temperature ✅
 Use max_tokens
 Render the completion✅

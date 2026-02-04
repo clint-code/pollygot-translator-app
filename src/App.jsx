@@ -22,12 +22,13 @@ function App() {
   };
 
   const handleStartOver = (e) => {
+
     e.preventDefault();
 
     setTextValue('');
     setTranslatedText('');
     setLoading(false);
-    setLanguage('French');
+    setLanguage('Swahili');
   };
 
   const onTranslateUsingOpenRouterAI = async () => {
@@ -67,7 +68,9 @@ function App() {
         },
         body: JSON.stringify({
           model: 'meta-llama/llama-3.1-8b-instruct',
-          messages: messages
+          messages: messages,
+          temperature: 1,
+          max_tokens: 100,
         })
       });
 
