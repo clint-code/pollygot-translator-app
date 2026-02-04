@@ -69,7 +69,7 @@ function App() {
         body: JSON.stringify({
           model: 'meta-llama/llama-3.1-8b-instruct',
           messages: messages,
-          temperature: 1,
+          temperature: 0.5,
           max_tokens: 100,
         })
       });
