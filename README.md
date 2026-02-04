@@ -4,11 +4,29 @@ This is a solo project, from [Scrimba](https://scrimba.com/the-ai-engineer-path-
 
 ## Core Requirements
 
-Build it from scratch (used [TailwindCSS](https://v3.tailwindcss.com/docs/installation) for the UI styling and React for the front-end with the help of [Vite](https://vite.dev/))
+Build it from scratch (used [TailwindCSS](https://v3.tailwindcss.com/docs/installation) for the UI styling and React for the front-end with the help of [Vite](https://vite.dev/) )
 
-Setup the OpenAPI (in this case, I used the OpenRouter API) ✅
-Select a model (using meta-llama/llama-3.1-8b-instruct) ✅
-Engineer a prompt ✅
-Use temperature ✅
-Use max_tokens ✅
-Render the completion✅
+<ul>
+    <li>Setup the OpenAPI (in this case, I used the OpenRouter API) ✅</li>
+    <li>Select a model (using meta-llama/llama-3.1-8b-instruct) ✅
+</li>
+    <li>Engineer a prompt ✅</li>
+    <li>Use temperature ✅</li>
+    <li>Use max_tokens ✅</li>
+    <li>Render the completion✅</li>
+</ul>
+
+
+## Stretch Goals
+
+<ul>
+    <li>Turn into chat app </li>
+    <li>Add functionality :
+        <ul>
+            <li>Ability to correct</li>
+            <li>Add AI generated images</li>
+        </ul>
+</li>
+    <li>Handle Errors </li>
+    <li>Deploy with API key hidden </li>
+</ul>
