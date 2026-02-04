@@ -1,1 +1,1 @@
-export const OPENROUTER_API_KEY = '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';
+export const OPENROUTER_API_KEY = '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';
