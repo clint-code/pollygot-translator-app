@@ -5,16 +5,16 @@ export default function Header() {
     return (
         <>
 
-            <div className="flex justify-center h-[200px] bg-[url('../src/assets/img/header-background.png')] bg-top bg-no-repeat">
+            <div className="flex justify-center h-[200px]  bg-[url('../src/assets/img/header-background.png')] bg-top bg-no-repeat">
 
                 <div className="flex items-center gap-4 p-10">
 
                     <div className="logo-section">
-                        <img 
+                        <img
                             src={parrot}
-                            alt="PollyGlot Logo"  
-                            width={95} 
-                            height={85}/>
+                            alt="PollyGlot Logo"
+                            width={95}
+                            height={85} />
                     </div>
 
                     <div className="text-section">
