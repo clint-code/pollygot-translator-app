@@ -39,12 +39,13 @@ function App() {
     const messages = [
       {
         role: 'system',
-        content: 'You are a helpful assistant that translates text into the user\'s selected language.'
+        content: `You are a helpful assistant that translates text into the user\'s selected language.
+        Translate the following text to ${language}: "${textValue} Follow the instructions between ### to set 
+        the style of translation`
       },
       {
         role: 'user',
-        content: `Translate the following text to ${language}: "${textValue} Use examples between ### to set the style of translation"
-        
+        content: `Here's your translation:
         ###
           Only give me the translated text, nothing else.
         ###

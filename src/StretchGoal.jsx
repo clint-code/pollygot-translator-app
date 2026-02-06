@@ -8,8 +8,8 @@ function StretchGoal() {
     const [language, setLanguage] = useState('');
     const [loading, setLoading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    //const [textValue, setTextValue] = useState('');
-    const [textValue, setSentTextValue] = useState('');
+    const [sentTextValue, setSentTextValue] = useState('');
+    const [textValue, setTextValue] = useState('');
     const [translatedText, setTranslatedText] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('French');
 
@@ -30,7 +30,10 @@ function StretchGoal() {
     const onSendingText = () => {
 
         setSentTextValue(textValue);
-        console.log("Sent text value:", sentTextValue);
+        console.log("Sent text value:", textValue);
+        setTextValue('');
+
+        onTranslateUsingOpenRouterAI();
 
     };
 
@@ -45,7 +48,13 @@ function StretchGoal() {
             },
             {
                 role: 'user',
-                content: `Translate the following text to ${language}: "${textValue}"`
+                content: `Translate the following text to ${language}: "${sentTextValue}. Follow the instructions between ### to set the style of translation"
+                
+                ###
+                    Only give me the translated text, nothing else.
+                ###
+                
+                `
             }
         ];
 
@@ -71,7 +80,8 @@ function StretchGoal() {
             // Extract the translated text from the response
             if (data.choices && data.choices[0] && data.choices[0].message) {
                 const translatedText = data.choices[0].message.content;
-                setTranslatedText(translatedText);
+                console.log("Translated text:", translatedText);
+                //setTranslatedText(translatedText);
             }
 
         } catch (error) {
@@ -106,10 +116,10 @@ function StretchGoal() {
                     </div>
 
                     {/* User Text */}
-                    {textValue && (
+                    {sentTextValue && (
                         <div className="flex justify-end mb-6">
                             <div className="bg-[#78DC78] text-[#1D2B3A] p-4 rounded-xl max-w-[80%]">
-                                <p className="font-bold text-lg">{textValue}</p>
+                                <p className="font-bold text-lg">{sentTextValue}</p>
                             </div>
                         </div>
                     )}
@@ -128,10 +138,10 @@ function StretchGoal() {
                             className="border-1 border-[#1D2B3A] rounded-xl py-4 px-6 text-lg font-bold text-[#333333] bg-[#EFF0F4] w-full p-5"
                             placeholder="Type here..."
                             value={textValue}
-                            onChange={(e) => setSentTextValue(e.target.value)} />
+                            onChange={(e) => setTextValue(e.target.value)} />
 
                         <button
-                            disabled={textValue === ''}
+                            disabled={textValue == ''}
                             onClick={onSendingText}
                             className="absolute right-4 top-1/2 -translate-y-1/2">
                             <img src={sendBtn} alt="Send" className="w-6 h-6" />
@@ -141,24 +151,28 @@ function StretchGoal() {
 
                     {/* Language Selectors */}
                     <div className="flex justify-center gap-8">
+
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'French' ? 'ring-4 rounded-sm' : ''}`}
                             onClick={() => setSelectedLanguage('French')}
                         >
                             <img src={frFlag} alt="French" className="w-16 h-10 object-cover shadow-md" />
                         </button>
+
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'Spanish' ? 'ring-4 rounded-sm' : ''}`}
                             onClick={() => setSelectedLanguage('Spanish')}
                         >
                             <img src={spFlag} alt="Spanish" className="w-16 h-10 object-cover shadow-md" />
                         </button>
+
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'Japanese' ? 'ring-4 rounded-sm' : ''}`}
                             onClick={() => setSelectedLanguage('Japanese')}
                         >
                             <img src={jpnFlag} alt="Japanese" className="w-16 h-10 object-cover shadow-md" />
                         </button>
+
                     </div>
 
                 </div>
