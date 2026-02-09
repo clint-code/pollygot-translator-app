@@ -75,6 +75,19 @@ function StretchGoal() {
                 })
             });
 
+            if (!response.ok) {
+                if (response.status === 401) {
+                    toast.error('Error 401: Unauthorized. Please check your API key.');
+                } else if (response.status === 400) {
+                    toast.error('Error 400: Bad Request. Please check your request parameters.');
+                } else if (response.status === 500) {
+                    toast.error('Error 500: Internal Server Error. Please try again later.');
+                } else {
+                    toast.error('An error occurred during translation.');
+                }
+                return;
+            }
+
             const data = await response.json();
 
             // Extract the translated text from the response
@@ -141,9 +154,9 @@ function StretchGoal() {
                             onChange={(e) => setTextValue(e.target.value)} />
 
                         <button
-                            disabled={textValue == ''}
+                            disabled={textValue === ''}
                             onClick={onSendingText}
-                            className="absolute right-4 top-1/2 -translate-y-1/2">
+                            className="absolute right-4 top-1/2 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
                             <img src={sendBtn} alt="Send" className="w-6 h-6" />
                         </button>
 

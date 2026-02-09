@@ -42,20 +42,26 @@ function App() {
       {
         role: 'system',
         content: `You are a helpful assistant that translates text into the user\'s selected language.
-        Translate the following text to ${language}: "${textValue} Follow the instructions between ### to set 
-        the style of translation`
+        Translate the following text to ${language}: "${textValue} `
       },
       {
         role: 'user',
-        content: `Here's your translation:
+        content: `Follow the instructions between ### to set the style of translation. Here's your translation:
+
         ###
           Only give me the translated text, nothing else.
         ###
 
         ###
-          Where possible, when translating to Japanese, show the romaji in parentheses. For example: 
-          Konnichiwa (Hello)
-        ###`
+          Where possible, when translating to Japanese and both hiragana and katakana are used, also show the romaji in parentheses. Use this format when translating: 
+           わたしのなまえはクリントンです (Watashi wa Kurinton-san desu)
+        ###
+        
+        ###
+          And where possible, when translating to Japanese and only katakana is used, also show the romaji in parentheses. Use this format when translating: 
+           スペシャル (Supesharu)
+        ###
+        `
       }
     ];
 
@@ -295,7 +301,9 @@ function App() {
 
           </form>
 
-          <ToastContainer position="top-right" />
+          <ToastContainer
+            position="top-right"
+            theme="dark" />
 
         </>
 
