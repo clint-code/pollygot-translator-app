@@ -277,6 +277,7 @@ function App() {
                     <input
                       type="text"
                       value={translatedText}
+                      readOnly
                       className="font-bold text-[#333333] bg-[#EFF0F4] w-full p-5" />
 
                     <button
