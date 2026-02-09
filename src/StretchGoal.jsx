@@ -48,7 +48,7 @@ function StretchGoal() {
             },
             {
                 role: 'user',
-                content: `Translate the following text to ${language}: "${sentTextValue}. Follow the instructions between ### to set the style of translation"
+                content: `Translate the sent text to the selected language ${language}: "${sentTextValue}. Follow the instructions between ### to set the style of translation"
                 
                 ###
                     Only give me the translated text, nothing else.

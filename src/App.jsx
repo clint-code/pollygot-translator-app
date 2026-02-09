@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { OPENROUTER_API_KEY } from '../config';
 import { Routes, Route, Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import StretchGoal from './StretchGoal';
 
 import './App.css';
@@ -73,6 +75,19 @@ function App() {
           max_tokens: 1000,
         })
       });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          toast.error('Error 401: Unauthorized. Please check your API key.');
+        } else if (response.status === 400) {
+          toast.error('Error 400: Bad Request. Please check your request parameters.');
+        } else if (response.status === 500) {
+          toast.error('Error 500: Internal Server Error. Please try again later.');
+        } else {
+          toast.error('An error occurred during translation.');
+        }
+        return;
+      }
 
       const data = await response.json();
 
@@ -280,7 +295,10 @@ function App() {
 
           </form>
 
+          <ToastContainer position="top-right" />
+
         </>
+
       } />
 
       <Route
