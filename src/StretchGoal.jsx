@@ -5,7 +5,6 @@ import './App.css';
 import Header from './components/header';
 
 function StretchGoal() {
-    const [language, setLanguage] = useState('');
     const [loading, setLoading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [sentTextValue, setSentTextValue] = useState('');
@@ -29,31 +28,49 @@ function StretchGoal() {
 
     const onSendingText = () => {
 
-        setSentTextValue(textValue);
-        console.log("Sent text value:", textValue);
+        const textToTranslate = textValue;
+        const targetLanguage = selectedLanguage;
+
+        setSentTextValue(textToTranslate);
         setTextValue('');
 
-        onTranslateUsingOpenRouterAI();
+        console.log("Sent text value:", textToTranslate);
+        console.log("Language:", targetLanguage);
+
+        onTranslateUsingOpenRouterAI(textToTranslate, targetLanguage);
 
     };
 
-    const onTranslateUsingOpenRouterAI = async () => {
+    const onTranslateUsingOpenRouterAI = async (textToTranslate, targetLanguage) => {
 
         setLoading(true);
+
+        console.log("Translating text:", textToTranslate);
+        console.log("Language:", targetLanguage);
 
         const messages = [
             {
                 role: 'system',
-                content: 'You are a helpful assistant that translates text into the user\'s selected language.'
+                content: `You are a helpful assistant that translates text into the user\'s selected language.
+                Translate the following text to ${targetLanguage}: "${textToTranslate} `
             },
             {
                 role: 'user',
-                content: `Translate the sent text to the selected language ${language}: "${sentTextValue}. Follow the instructions between ### to set the style of translation"
+                content: `Follow the instructions between ### to set the style of translation. Here's your translation:
+
+                ###
+                Only give me the translated text, nothing else.
+                ###
+
+                ###
+                Where possible, when translating to Japanese and both hiragana and katakana are used, also show the romaji in parentheses. Use this format when translating: 
+                わたしのなまえはクリントンです (Watashi wa Kurinton-san desu)
+                ###
                 
                 ###
-                    Only give me the translated text, nothing else.
+                And where possible, when translating to Japanese and only katakana is used, also show the romaji in parentheses. Use this format when translating: 
+                スペシャル (Supesharu)
                 ###
-                
                 `
             }
         ];
@@ -70,7 +87,7 @@ function StretchGoal() {
                 body: JSON.stringify({
                     model: 'meta-llama/llama-3.1-8b-instruct',
                     messages: messages,
-                    temperature: 0.5,
+                    temperature: 0,
                     max_tokens: 1000,
                 })
             });
@@ -94,7 +111,7 @@ function StretchGoal() {
             if (data.choices && data.choices[0] && data.choices[0].message) {
                 const translatedText = data.choices[0].message.content;
                 console.log("Translated text:", translatedText);
-                //setTranslatedText(translatedText);
+                setTranslatedText(translatedText);
             }
 
         } catch (error) {
@@ -139,7 +156,7 @@ function StretchGoal() {
 
                     {/* Bot Translation */}
                     {translatedText && (
-                        <div className="bg-[#005999] text-white p-4 rounded-xl mb-8">
+                        <div className="bg-[#005999] text-white p-4 rounded-xl mb-8 max-w-[80%]">
                             <p className="font-bold text-lg">{translatedText}</p>
                         </div>
                     )}
