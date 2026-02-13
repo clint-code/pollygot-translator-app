@@ -119,7 +119,7 @@ function App() {
 
           <Header />
 
-          <form className="m-10 p-10" onSubmit={onSubmitTranslateText}>
+          <form className="p-5" onSubmit={onSubmitTranslateText}>
 
             <div className="border-2 border-black rounded-2xl p-6">
 

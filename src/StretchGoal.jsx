@@ -126,7 +126,7 @@ function StretchGoal() {
         <>
             <Header />
 
-            <div className="m-10 p-10">
+            <div className="p-5">
 
                 <h1 className="text-4xl font-bold text-center text-[#035A9D] mb-8">
                     Welcome to PollyGlot 2.0! 🎉
@@ -136,7 +136,7 @@ function StretchGoal() {
                     This is the new and improved version of PollyGlot.
                 </p>
 
-                <div className="chat-section border-4 border-[#1D2B3A] rounded-2xl p-6 bg-white w-full mx-auto shadow-xl">
+                <div className="chat-section border-4 border-[#1D2B3A] rounded-2xl p-6 bg-white w-full mx-auto shadow-xl max-[640px]:p-3">
 
                     {/* Bot Instruction */}
                     <div className="bg-[#035A9D] text-white p-4 rounded-xl mb-10 relative">
@@ -180,7 +180,7 @@ function StretchGoal() {
                     </div>
 
                     {/* Language Selectors */}
-                    <div className="flex justify-center gap-8">
+                    <div className="flex justify-center gap-8 max-[640px]:flex-col items-center">
 
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'French' ? 'ring-4 rounded-sm' : ''}`}
