@@ -7,9 +7,8 @@ import Header from './components/header';
 function StretchGoal() {
     const [loading, setLoading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [sentTextValue, setSentTextValue] = useState('');
     const [textValue, setTextValue] = useState('');
-    const [translatedText, setTranslatedText] = useState('');
+    const [messages, setMessages] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState('French');
 
     // Import assets
@@ -31,7 +30,8 @@ function StretchGoal() {
         const textToTranslate = textValue;
         const targetLanguage = selectedLanguage;
 
-        setSentTextValue(textToTranslate);
+        // Add user message to history
+        setMessages(prev => [...prev, { text: textToTranslate, type: 'user' }]);
         setTextValue('');
 
         console.log("Sent text value:", textToTranslate);
@@ -111,7 +111,9 @@ function StretchGoal() {
             if (data.choices && data.choices[0] && data.choices[0].message) {
                 const translatedText = data.choices[0].message.content;
                 console.log("Translated text:", translatedText);
-                setTranslatedText(translatedText);
+
+                // Add bot translation to history
+                setMessages(prev => [...prev, { text: translatedText, type: 'bot' }]);
             }
 
         } catch (error) {
@@ -145,21 +147,14 @@ function StretchGoal() {
                         </p>
                     </div>
 
-                    {/* User Text */}
-                    {sentTextValue && (
-                        <div className="flex justify-end mb-6">
-                            <div className="bg-[#78DC78] text-[#1D2B3A] p-4 rounded-xl max-w-[80%]">
-                                <p className="font-bold text-lg">{sentTextValue}</p>
+                    {/* Message History */}
+                    {messages.map((msg, index) => (
+                        <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'} mb-6`}>
+                            <div className={`${msg.type === 'user' ? 'bg-[#78DC78] text-[#1D2B3A]' : 'bg-[#005999] text-white'} p-4 rounded-xl max-w-[80%] shadow-md`}>
+                                <p className="font-bold text-lg">{msg.text}</p>
                             </div>
                         </div>
-                    )}
-
-                    {/* Bot Translation */}
-                    {translatedText && (
-                        <div className="bg-[#005999] text-white p-4 rounded-xl mb-8 max-w-[80%]">
-                            <p className="font-bold text-lg">{translatedText}</p>
-                        </div>
-                    )}
+                    ))}
 
                     {/* Input Field */}
                     <div className="relative mb-8">

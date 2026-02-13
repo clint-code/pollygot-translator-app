@@ -1,1 +1,1 @@
-export const OPENROUTER_API_KEY = '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';
+export const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
