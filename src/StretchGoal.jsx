@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/header';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function StretchGoal() {
     const [loading, setLoading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -99,6 +102,8 @@ function StretchGoal() {
                     toast.error('Error 400: Bad Request. Please check your request parameters.');
                 } else if (response.status === 500) {
                     toast.error('Error 500: Internal Server Error. Please try again later.');
+                } else if (response.status === 402) {
+                    toast.error('"Insufficient credits. This account never purchased credits. Make sure your key is on the correct account or org, and if so, purchase more at https://openrouter.ai/settings/credits');
                 } else {
                     toast.error('An error occurred during translation.');
                 }
@@ -113,7 +118,11 @@ function StretchGoal() {
                 console.log("Translated text:", translatedText);
 
                 // Add bot translation to history
-                setMessages(prev => [...prev, { text: translatedText, type: 'bot' }]);
+                setMessages(prev => [...prev, {
+                    text: translatedText,
+                    type: 'bot'
+                }
+                ]);
             }
 
         } catch (error) {
@@ -211,6 +220,12 @@ function StretchGoal() {
                     </Link>
                 </div>
             </div>
+
+            <ToastContainer
+                position="top-right"
+                theme="dark"
+            />
+
         </>
     );
 }
