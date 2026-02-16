@@ -32,21 +32,32 @@ function StretchGoal() {
 
         const textToTranslate = textValue;
         const targetLanguage = selectedLanguage;
-
-        // Add user message to history
-        setMessages(prev => [...prev, { text: textToTranslate, type: 'user' }]);
-        setTextValue('');
+        const specialCharRegex = /[^a-zA-Z\s,!]/;
 
         console.log("Sent text value:", textToTranslate);
         console.log("Language:", targetLanguage);
 
-        onTranslateUsingOpenRouterAI(textToTranslate, targetLanguage);
+        if (specialCharRegex.test(textToTranslate)) {
+
+            toast.error('Error: Invalid input. Please enter a valid text to translate.');
+            console.log("Invalid input. Please enter a valid text to translate.");
+
+        } else {
+            // Add user message to history
+            console.log("Adding user message to history.");
+            setMessages(prev => [...prev, { text: textToTranslate, type: 'user' }]);
+            setTextValue('');
+            onTranslateUsingOpenRouterAI(textToTranslate, targetLanguage);
+
+        }
 
     };
 
     const onTranslateUsingOpenRouterAI = async (textToTranslate, targetLanguage) => {
 
         setLoading(true);
+
+
 
         console.log("Translating text:", textToTranslate);
         console.log("Language:", targetLanguage);
@@ -78,6 +89,11 @@ function StretchGoal() {
                 ###
                 Where possible, when translating to Japanese and kanji and hiragana are used, also show the romaji in parentheses. Use this format when translating: 
                 日々は特別な日です (Hibi wa tokubetsu na hi desu)
+                ###
+
+                ###
+                If the text to translate is either a number or special character or both, throw an error. Don't translate
+                it. Just say "ERROR: Invalid input. Please enter a valid text to translate."
                 ###
                 
                 `
