@@ -20,7 +20,7 @@ Build it from scratch (used [TailwindCSS](https://v3.tailwindcss.com/docs/instal
 ## Stretch Goals
 
 <ul>
-    <li>Turn into chat app </li>
+    <li>Turn into chat app✅ </li>
     <li>Add functionality :
         <ul>
             <li>Ability to correct</li>
@@ -28,5 +28,5 @@ Build it from scratch (used [TailwindCSS](https://v3.tailwindcss.com/docs/instal
         </ul>
 </li>
     <li>Handle Errors </li>
-    <li>Deploy with API key hidden </li>
+    <li>Deploy with API key hidden✅ </li>
 </ul>

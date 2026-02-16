@@ -67,13 +67,19 @@ function StretchGoal() {
 
                 ###
                 Where possible, when translating to Japanese and both hiragana and katakana are used, also show the romaji in parentheses. Use this format when translating: 
-                わたしのなまえはクリントンです (Watashi wa Kurinton-san desu)
+                フォーミュラワンがすきです (Fōmyura wan ga suki desu)
+                ###
+
+                ###
+                Where possible, when translating to Japanese and kanji is used, also show the romaji in parentheses. Use this format when translating: 
+                友達 (Tomodachi)
+                ###
+
+                ###
+                Where possible, when translating to Japanese and kanji and hiragana are used, also show the romaji in parentheses. Use this format when translating: 
+                日々は特別な日です (Hibi wa tokubetsu na hi desu)
                 ###
                 
-                ###
-                And where possible, when translating to Japanese and only katakana is used, also show the romaji in parentheses. Use this format when translating: 
-                スペシャル (Supesharu)
-                ###
                 `
             }
         ];
@@ -90,7 +96,7 @@ function StretchGoal() {
                 body: JSON.stringify({
                     model: 'meta-llama/llama-3.1-8b-instruct',
                     messages: messages,
-                    temperature: 0,
+                    temperature: 0.5,
                     max_tokens: 1000,
                 })
             });
@@ -164,6 +170,15 @@ function StretchGoal() {
                             </div>
                         </div>
                     ))}
+
+                    {loading && (
+                        <div className="flex justify-start mb-6">
+                            <div className="bg-[#005999] text-white p-4 rounded-xl max-w-[80%] shadow-md">
+                                <p className="font-bold text-lg">Loading translation...</p>
+                            </div>
+                        </div>
+                    )}
+
 
                     {/* Input Field */}
                     <div className="relative mb-8">
