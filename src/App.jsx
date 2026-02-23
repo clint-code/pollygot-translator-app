@@ -16,11 +16,21 @@ function App() {
   const [translatedText, setTranslatedText] = useState('');
 
 
-
   const onSubmitTranslateText = (e) => {
+
     e.preventDefault();
 
-    onTranslateUsingOpenRouterAI();
+    const textToTranslate = textValue.trim();
+
+    if (!/[a-zA-Z]/.test(textToTranslate)) {
+
+      toast.error('Please enter a valid text to translate.');
+
+    } else {
+
+      onTranslateUsingOpenRouterAI(textToTranslate);
+
+    }
 
   };
 
@@ -34,7 +44,7 @@ function App() {
     setLanguage('Swahili');
   };
 
-  const onTranslateUsingOpenRouterAI = async () => {
+  const onTranslateUsingOpenRouterAI = async (textToTranslate) => {
 
     setLoading(true);
 
@@ -42,7 +52,7 @@ function App() {
       {
         role: 'system',
         content: `You are a helpful assistant that translates text into the user\'s selected language.
-        Translate the following text to ${language}: "${textValue} `
+        Translate the following text to ${language}: "${textToTranslate} `
       },
       {
         role: 'user',
@@ -250,7 +260,8 @@ function App() {
                       </div>
 
                       <button
-                        disabled={textValue === ''}
+                        disabled={textValue === '' || !textValue.trim()}
+                        onClick={onSubmitTranslateText}
                         className="bg-[#035A9D] text-white font-bold py-3 px-6 rounded-lg mt-5 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
                         Translate
                       </button>

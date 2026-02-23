@@ -90,7 +90,6 @@ function StretchGoal() {
             let imageUrl = null;
 
             if (isDescriptionIsShort) {
-                //setLoadingImage(true);
 
                 const hresponse = await fetch(
                     HUGGINGFACE_URL,
@@ -108,7 +107,6 @@ function StretchGoal() {
                     });
 
                 if (hresponse.ok) {
-                    //setLoadingImage(false);
 
                     const hfData = await hresponse.json();
                     console.log("HuggingFace Data: ", hfData);
@@ -120,7 +118,6 @@ function StretchGoal() {
                 }
 
             } else {
-                //setLoadingImage(false);
                 toast.error('Error: Description is too long. Please enter a description with 2 words or less.');
             }
 

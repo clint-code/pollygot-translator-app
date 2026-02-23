@@ -1,4 +1,4 @@
-# Pollygot Translation App
+# Pollyglot Translation App
 
 This is a solo project, from [Scrimba](https://scrimba.com/the-ai-engineer-path-c02v/~0o)
 
@@ -24,7 +24,7 @@ Build it from scratch (used [TailwindCSS](https://v3.tailwindcss.com/docs/instal
     <li>Add functionality :
         <ul>
             <li>Ability to correct</li>
-            <li>Add AI generated images</li>
+            <li>Add AI generated images✅</li>
         </ul>
 </li>
     <li>Handle Errors </li>
