@@ -54,24 +54,24 @@ function StretchGoal() {
             },
             {
                 role: 'user',
-                content: `Follow the instructions between ### and ### to set the style of translation. Here's your translation:
+                content: `Follow the instructions between ### and ### to set the style of translation:
 
                 ###
                 Only give me the translated text, nothing else.
                 ###
 
                 ###
-                Where possible, when translating to Japanese and both hiragana and katakana are used, also show the romaji in parentheses. Use this format when translating: 
+                Where possible, when translating to Japanese, and both hiragana and katakana are used, also show the romaji in parentheses. Use this format when translating: 
                 フォーミュラワンがすきです (Fōmyura wan ga suki desu)
                 ###
 
                 ###
-                Where possible, when translating to Japanese and kanji is used, also show the romaji in parentheses. Use this format when translating: 
+                Where possible, when translating to Japanese, and kanji is used, also show the romaji in parentheses. Use this format when translating: 
                 友達 (Tomodachi)
                 ###
 
                 ###
-                Where possible, when translating to Japanese and kanji and hiragana are used, also show the romaji in parentheses. Use this format when translating: 
+                Where possible, when translating to Japanese, and kanji and hiragana are used, also show the romaji in parentheses. Use this format when translating: 
                 日々は特別な日です (Hibi wa tokubetsu na hi desu)
                 ###
 
