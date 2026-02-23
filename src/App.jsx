@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { OPENROUTER_API_KEY } from '../config';
+import { OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_URL } from '../config';
 import { Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -67,7 +67,7 @@ function App() {
 
     try {
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch(OPENROUTER_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ function App() {
           'HTTP-Referer': window.location.href,
         },
         body: JSON.stringify({
-          model: 'meta-llama/llama-3.1-8b-instruct',
+          model: OPENROUTER_MODEL,
           messages: messages,
           temperature: 0.5,
           max_tokens: 1000,

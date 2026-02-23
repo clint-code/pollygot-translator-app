@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_URL } from '../config';
+import { OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_URL, HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, HUGGINGFACE_URL } from '../config';
 import { Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/header';
@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function StretchGoal() {
     const [loading, setLoading] = useState(false);
-    const [isProcessing, setIsProcessing] = useState(false);
     const [textValue, setTextValue] = useState('');
     const [messages, setMessages] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState('French');
@@ -86,6 +85,45 @@ function StretchGoal() {
 
         try {
 
+            const words = textToTranslate.trim().split(" ");
+            const isDescriptionIsShort = words.length <= 2;
+            let imageUrl = null;
+
+            if (isDescriptionIsShort) {
+                //setLoadingImage(true);
+
+                const hresponse = await fetch(
+                    HUGGINGFACE_URL,
+                    {
+                        headers: {
+                            'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
+                            'Content-Type': 'application/json',
+                        },
+                        method: 'POST',
+                        body: JSON.stringify({
+                            prompt: textToTranslate,
+                            model: HUGGINGFACE_MODEL,
+                            response_format: "b64_json"
+                        })
+                    });
+
+                if (hresponse.ok) {
+                    //setLoadingImage(false);
+
+                    const hfData = await hresponse.json();
+                    console.log("HuggingFace Data: ", hfData);
+
+                    if (hfData.data && hfData.data[0]) {
+                        imageUrl = hfData.data[0].url || (hfData.data[0].b64_json ? `data:image/png;base64,${hfData.data[0].b64_json}` : null);
+                        console.log("Generated Image Source:", imageUrl);
+                    }
+                }
+
+            } else {
+                //setLoadingImage(false);
+                toast.error('Error: Description is too long. Please enter a description with 2 words or less.');
+            }
+
             const response = await fetch(OPENROUTER_URL, {
                 method: 'POST',
                 headers: {
@@ -121,14 +159,13 @@ function StretchGoal() {
             // Extract the translated text from the response
             if (data.choices && data.choices[0] && data.choices[0].message) {
                 const translatedText = data.choices[0].message.content;
-                console.log("Translated text:", translatedText);
 
                 // Add bot translation to history
                 setMessages(prev => [...prev, {
                     text: translatedText,
+                    image: imageUrl,
                     type: 'bot'
-                }
-                ]);
+                }]);
             }
 
         } catch (error) {
@@ -171,6 +208,11 @@ function StretchGoal() {
                                         : 'bg-[#005999] text-white')} p-4 rounded-xl max-w-[80%] shadow-md`
                             }>
                                 <p className="font-bold text-lg">{msg.text}</p>
+                                {msg.image && (
+                                    <div className="mt-3">
+                                        <img src={msg.image} alt="Generated" className="rounded-lg shadow-sm border border-black/10 w-1/4" />
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -178,7 +220,7 @@ function StretchGoal() {
                     {loading && (
                         <div className="flex justify-start mb-6">
                             <div className="bg-[#005999] text-white p-4 rounded-xl max-w-[80%] shadow-md">
-                                <p className="font-bold text-lg animate-pulse">Loading translation...</p>
+                                <p className="font-bold text-lg animate-pulse">....</p>
                             </div>
                         </div>
                     )}
