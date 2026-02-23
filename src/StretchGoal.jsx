@@ -20,32 +20,21 @@ function StretchGoal() {
     const jpnFlag = new URL('./assets/img/jpn-flag.png', import.meta.url).href;
     const sendBtn = new URL('./assets/img/send-btn.png', import.meta.url).href;
 
-    const onSubmitTranslateText = (e) => {
-        e.preventDefault();
-        console.log(e);
-
-        //onTranslateUsingOpenRouterAI();
-
-    };
-
     const onSendingText = () => {
 
-        const textToTranslate = textValue;
+        const textToTranslate = textValue.trim();
         const targetLanguage = selectedLanguage;
-        const specialCharRegex = /[^a-zA-Z\s,!]/;
 
-        console.log("Sent text value:", textToTranslate);
-        console.log("Language:", targetLanguage);
+        if (!/[a-zA-Z]/.test(textToTranslate)) {
 
-        if (specialCharRegex.test(textToTranslate)) {
-
-            toast.error('Error: Invalid input. Please enter a valid text to translate.');
-            console.log("Invalid input. Please enter a valid text to translate.");
+            toast.error('ERROR: Invalid input. Please enter a valid text and no special characters to translate.');
 
         } else {
             // Add user message to history
-            console.log("Adding user message to history.");
-            setMessages(prev => [...prev, { text: textToTranslate, type: 'user' }]);
+            setMessages(prev => [...prev, {
+                text: textToTranslate,
+                type: 'user'
+            }]);
             setTextValue('');
             onTranslateUsingOpenRouterAI(textToTranslate, targetLanguage);
 
@@ -57,11 +46,6 @@ function StretchGoal() {
 
         setLoading(true);
 
-
-
-        console.log("Translating text:", textToTranslate);
-        console.log("Language:", targetLanguage);
-
         const messages = [
             {
                 role: 'system',
@@ -70,7 +54,7 @@ function StretchGoal() {
             },
             {
                 role: 'user',
-                content: `Follow the instructions between ### to set the style of translation. Here's your translation:
+                content: `Follow the instructions between ### and ### to set the style of translation. Here's your translation:
 
                 ###
                 Only give me the translated text, nothing else.
@@ -181,7 +165,11 @@ function StretchGoal() {
                     {/* Message History */}
                     {messages.map((msg, index) => (
                         <div key={index} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'} mb-6`}>
-                            <div className={`${msg.type === 'user' ? 'bg-[#78DC78] text-[#1D2B3A]' : 'bg-[#005999] text-white'} p-4 rounded-xl max-w-[80%] shadow-md`}>
+                            <div className={
+                                `${msg.type === 'user' ? 'bg-[#4cd24c] text-white'
+                                    : (msg.text.includes('ERROR:') ? 'bg-red-500 text-white'
+                                        : 'bg-[#005999] text-white')} p-4 rounded-xl max-w-[80%] shadow-md`
+                            }>
                                 <p className="font-bold text-lg">{msg.text}</p>
                             </div>
                         </div>
@@ -190,7 +178,7 @@ function StretchGoal() {
                     {loading && (
                         <div className="flex justify-start mb-6">
                             <div className="bg-[#005999] text-white p-4 rounded-xl max-w-[80%] shadow-md">
-                                <p className="font-bold text-lg">Loading translation...</p>
+                                <p className="font-bold text-lg animate-pulse">Loading translation...</p>
                             </div>
                         </div>
                     )}
@@ -206,7 +194,7 @@ function StretchGoal() {
                             onChange={(e) => setTextValue(e.target.value)} />
 
                         <button
-                            disabled={textValue === ''}
+                            disabled={textValue === '' || !textValue.trim()}
                             onClick={onSendingText}
                             className="absolute right-4 top-1/2 -translate-y-1/2 disabled:opacity-50 disabled:cursor-not-allowed">
                             <img src={sendBtn} alt="Send" className="w-6 h-6" />
