@@ -75,8 +75,8 @@ function StretchGoal() {
                 ###
 
                 ###
-                If the text to translate is either a number or special character or both, throw an error. Don't translate
-                it. Just say "ERROR: Invalid input. Please enter a valid text to translate."
+                If the text to translate is either a number or special character or both, throw an error.
+                Only say "ERROR: Invalid input. Please enter a valid text to translate."
                 ###
                 
                 `
@@ -86,7 +86,7 @@ function StretchGoal() {
         try {
 
             const words = textToTranslate.trim().split(" ");
-            const isDescriptionIsShort = words.length <= 2;
+            const isDescriptionIsShort = words.length <= 3;
             let imageUrl = null;
 
             if (isDescriptionIsShort) {
@@ -109,16 +109,14 @@ function StretchGoal() {
                 if (hresponse.ok) {
 
                     const hfData = await hresponse.json();
-                    console.log("HuggingFace Data: ", hfData);
 
                     if (hfData.data && hfData.data[0]) {
                         imageUrl = hfData.data[0].url || (hfData.data[0].b64_json ? `data:image/png;base64,${hfData.data[0].b64_json}` : null);
-                        console.log("Generated Image Source:", imageUrl);
                     }
                 }
 
             } else {
-                toast.error('Error: Description is too long. Please enter a description with 2 words or less.');
+                toast.error('Error: Description is too long. Please enter a description with 3 words or less.');
             }
 
             const response = await fetch(OPENROUTER_URL, {
@@ -166,7 +164,7 @@ function StretchGoal() {
             }
 
         } catch (error) {
-            console.error('Error during translation:', error);
+            toast.error('Error: ' + error);
         } finally {
             setLoading(false);
         }
@@ -207,7 +205,10 @@ function StretchGoal() {
                                 <p className="font-bold text-lg">{msg.text}</p>
                                 {msg.image && (
                                     <div className="mt-3">
-                                        <img src={msg.image} alt="Generated" className="rounded-lg shadow-sm border border-black/10 w-1/4" />
+                                        <img
+                                            src={msg.image}
+                                            alt="Generated-image"
+                                            className="rounded-lg shadow-sm border border-black/10 w-1/4 max-[520px]:w-3/4" />
                                     </div>
                                 )}
                             </div>
@@ -242,27 +243,27 @@ function StretchGoal() {
                     </div>
 
                     {/* Language Selectors */}
-                    <div className="flex justify-center gap-8 max-[640px]:flex-col items-center">
+                    <div className="flex justify-center gap-8">
 
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'French' ? 'ring-4 rounded-sm' : ''}`}
                             onClick={() => setSelectedLanguage('French')}
                         >
-                            <img src={frFlag} alt="French" className="w-16 h-10 object-cover shadow-md" />
+                            <img src={frFlag} alt="French" className="w-16 h-10 object-cover shadow-md max-[520px]:w-10 max-[520px]:h-6" />
                         </button>
 
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'Spanish' ? 'ring-4 rounded-sm' : ''}`}
                             onClick={() => setSelectedLanguage('Spanish')}
                         >
-                            <img src={spFlag} alt="Spanish" className="w-16 h-10 object-cover shadow-md" />
+                            <img src={spFlag} alt="Spanish" className="w-16 h-10 object-cover shadow-md max-[520px]:w-10 max-[520px]:h-6" />
                         </button>
 
                         <button
                             className={`transition-transform hover:scale-110 ${selectedLanguage === 'Japanese' ? 'ring-4 rounded-sm' : ''}`}
                             onClick={() => setSelectedLanguage('Japanese')}
                         >
-                            <img src={jpnFlag} alt="Japanese" className="w-16 h-10 object-cover shadow-md" />
+                            <img src={jpnFlag} alt="Japanese" className="w-16 h-10 object-cover shadow-md max-[520px]:w-10 max-[520px]:h-6" />
                         </button>
 
                     </div>
