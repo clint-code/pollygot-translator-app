@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_URL, HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, HUGGINGFACE_URL } from '../config';
+import OpenAI from 'openai';
+import { OPEN_AI_KEY, OPEN_AI_MODEL, OPEN_AI_URL, HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, HUGGINGFACE_URL } from '../config';
 import { Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/header';
@@ -8,6 +9,13 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function StretchGoal() {
+
+    const openai = new OpenAI({
+        apiKey: OPEN_AI_KEY,
+        baseURL: OPEN_AI_URL,
+        dangerouslyAllowBrowser: true,
+    });
+
     const [loading, setLoading] = useState(false);
     const [textValue, setTextValue] = useState('');
     const [messages, setMessages] = useState([]);
@@ -119,41 +127,33 @@ function StretchGoal() {
                 toast.error('Error: Description is too long. Please enter a description with 3 words or less.');
             }
 
-            const response = await fetch(OPENROUTER_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                    'HTTP-Referer': window.location.href,
-                },
-                body: JSON.stringify({
-                    model: OPENROUTER_MODEL,
-                    messages: messages,
-                    temperature: 0.5,
-                    max_tokens: 1000,
-                })
+            const response = await openai.chat.completions.create({
+                model: OPEN_AI_MODEL,
+                messages: messages,
+                //temperature: 0.5,
+                //max_tokens: 1000,
             });
 
-            if (!response.ok) {
-                if (response.status === 401) {
-                    toast.error('Error 401: Unauthorized. Please check your API key.');
-                } else if (response.status === 400) {
-                    toast.error('Error 400: Bad Request. Please check your request parameters.');
-                } else if (response.status === 500) {
-                    toast.error('Error 500: Internal Server Error. Please try again later.');
-                } else if (response.status === 402) {
-                    toast.error('"Insufficient credits. This account never purchased credits. Make sure your key is on the correct account or org, and if so, purchase more at https://openrouter.ai/settings/credits');
-                } else {
-                    toast.error('An error occurred during translation.');
-                }
-                return;
-            }
+            console.log("Response: ", response);
 
-            const data = await response.json();
+            // if (!response.ok) {
+            //     if (response.status === 401) {
+            //         toast.error('Error 401: Unauthorized. Please check your API key.');
+            //     } else if (response.status === 400) {
+            //         toast.error('Error 400: Bad Request. Please check your request parameters.');
+            //     } else if (response.status === 500) {
+            //         toast.error('Error 500: Internal Server Error. Please try again later.');
+            //     } else if (response.status === 402) {
+            //         toast.error('"Insufficient credits. This account never purchased credits. Make sure your key is on the correct account or org, and if so, purchase more at https://openrouter.ai/settings/credits');
+            //     } else {
+            //         toast.error('An error occurred during translation.');
+            //     }
+            //     return;
+            // }
 
             // Extract the translated text from the response
-            if (data.choices && data.choices[0] && data.choices[0].message) {
-                const translatedText = data.choices[0].message.content;
+            if (response) {
+                const translatedText = response.choices[0].message.content;
 
                 // Add bot translation to history
                 setMessages(prev => [...prev, {
@@ -161,6 +161,8 @@ function StretchGoal() {
                     image: imageUrl,
                     type: 'bot'
                 }]);
+            } else {
+                toast.error('Error: ', error);
             }
 
         } catch (error) {
