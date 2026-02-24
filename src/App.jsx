@@ -92,8 +92,6 @@ function App() {
         //max_tokens: 1000,
       });
 
-      console.log("Response: ", response);
-
       // if (!response.ok) {
       //   if (response.status === 401) {
       //     toast.error('Error 401: Unauthorized. Please check your API key.');

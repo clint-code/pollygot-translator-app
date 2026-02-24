@@ -99,28 +99,23 @@ function StretchGoal() {
 
             if (isDescriptionIsShort) {
 
-                const hresponse = await fetch(
-                    HUGGINGFACE_URL,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
-                            'Content-Type': 'application/json',
-                        },
-                        method: 'POST',
-                        body: JSON.stringify({
-                            prompt: textToTranslate,
-                            model: HUGGINGFACE_MODEL,
-                            response_format: "b64_json"
-                        })
-                    });
+                const imageResponse = await openai.responses.create({
+                    prompt: textToTranslate,
+                    model: OPEN_AI_MODEL,
+                    tools: [{ type: "image_generation" }],
+                });
 
-                if (hresponse.ok) {
+                //Save the image to a file
+                const imageData = imageResponse.output
+                    .filter((output) => output.type === "image_generation_call")
+                    .map((output) => output.result);
 
-                    const hfData = await hresponse.json();
-
-                    if (hfData.data && hfData.data[0]) {
-                        imageUrl = hfData.data[0].url || (hfData.data[0].b64_json ? `data:image/png;base64,${hfData.data[0].b64_json}` : null);
-                    }
+                if (imageData.length > 0) {
+                    const imageBase64 = imageData[0];
+                    const fs = await import("fs");
+                    fs.writeFileSync("image.png", imageBase64, "base64");
+                    // imageUrl = `data:image/png;base64,${imageBase64}`;
+                    console.log("Image saved to image.png", imageBase64);
                 }
 
             } else {
