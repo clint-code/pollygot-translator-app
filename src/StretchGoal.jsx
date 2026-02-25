@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import OpenAI from 'openai';
-import { OPEN_AI_KEY, OPEN_AI_MODEL, OPEN_AI_URL, HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, HUGGINGFACE_URL } from '../config';
+import { OPEN_AI_KEY, OPEN_AI_MODEL, OPEN_AI_URL, OPEN_AI_IMAGE_MODEL, HUGGINGFACE_API_KEY, HUGGINGFACE_MODEL, HUGGINGFACE_URL } from '../config';
 import { Link } from 'react-router-dom';
 import './App.css';
 import Header from './components/header';
@@ -94,14 +94,19 @@ function StretchGoal() {
         try {
 
             const words = textToTranslate.trim().split(" ");
-            const isDescriptionIsShort = words.length <= 3;
+            const isDescriptionIsShort = words.length >= 2;
             let imageUrl = null;
 
             if (isDescriptionIsShort) {
 
                 const imageResponse = await openai.responses.create({
-                    prompt: textToTranslate,
-                    model: OPEN_AI_MODEL,
+                    model: OPEN_AI_IMAGE_MODEL,
+                    input: [
+                        {
+                            role: "user",
+                            content: textToTranslate,
+                        }
+                    ],
                     tools: [{ type: "image_generation" }],
                 });
 
@@ -110,12 +115,16 @@ function StretchGoal() {
                     .filter((output) => output.type === "image_generation_call")
                     .map((output) => output.result);
 
+                console.log("Image Data: ", imageData);
+
                 if (imageData.length > 0) {
                     const imageBase64 = imageData[0];
+                    // console.log("Image Base64: ", imageBase64);
                     const fs = await import("fs");
                     fs.writeFileSync("image.png", imageBase64, "base64");
-                    // imageUrl = `data:image/png;base64,${imageBase64}`;
-                    console.log("Image saved to image.png", imageBase64);
+
+                    imageUrl = `data:image/png;base64,${imageBase64}`;
+                    // console.log("Image saved to image.png", imageUrl);
                 }
 
             } else {
@@ -156,12 +165,13 @@ function StretchGoal() {
                     image: imageUrl,
                     type: 'bot'
                 }]);
+                console.log("Image URL in chat: ", imageUrl);
             } else {
-                toast.error('Error: ', error);
+                toast.error('ERROR: ', error);
             }
 
         } catch (error) {
-            toast.error('Error: ' + error);
+            toast.error('ERROR: ' + error);
         } finally {
             setLoading(false);
         }
@@ -200,14 +210,14 @@ function StretchGoal() {
                                         : 'bg-[#005999] text-white')} p-4 rounded-xl max-w-[80%] shadow-md`
                             }>
                                 <p className="font-bold text-lg">{msg.text}</p>
-                                {msg.image && (
+                                {/* {msg.image && (
                                     <div className="mt-3">
                                         <img
                                             src={msg.image}
                                             alt="Generated-image"
                                             className="rounded-lg shadow-sm border border-black/10 w-1/4 max-[520px]:w-3/4" />
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         </div>
                     ))}
