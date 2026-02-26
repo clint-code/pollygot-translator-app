@@ -112,8 +112,8 @@ function StretchGoal() {
                     //     }
                     // ],
                     // tools: [{ type: "image_generation" }],
-                    size: "512x512",
-                    n: 1,
+                    // size: "512x512",
+                    // n: 1,
                     prompt: textToTranslate,
                 });
 
