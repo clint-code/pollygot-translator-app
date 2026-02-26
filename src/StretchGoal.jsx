@@ -94,41 +94,57 @@ function StretchGoal() {
         try {
 
             const words = textToTranslate.trim().split(" ");
-            const isDescriptionIsShort = words.length >= 2;
+            console.log("Words:", words);
+
+            const isDescriptionIsShort = words.length <= 3;
+            console.log(isDescriptionIsShort);
+
             let imageUrl = null;
 
             if (isDescriptionIsShort) {
 
-                const imageResponse = await openai.responses.create({
+                const imageResponse = await openai.images.generate({
                     model: OPEN_AI_IMAGE_MODEL,
-                    input: [
-                        {
-                            role: "user",
-                            content: textToTranslate,
-                        }
-                    ],
-                    tools: [{ type: "image_generation" }],
+                    // input: [
+                    //     {
+                    //         role: "user",
+                    //         content: textToTranslate,
+                    //     }
+                    // ],
+                    // tools: [{ type: "image_generation" }],
+                    size: "512x512",
+                    n: 1,
+                    prompt: textToTranslate,
                 });
 
+                const imageBase64 = imageResponse.data[0].b64_json;
+                console.log("Image Data: ", imageBase64);
+
+                imageUrl = `data:image/png;base64,${imageBase64}`;
+                console.log("Image URL:", imageUrl);
+
                 //Save the image to a file
-                const imageData = imageResponse.output
-                    .filter((output) => output.type === "image_generation_call")
-                    .map((output) => output.result);
+                // const imageData = imageResponse.output
+                //     .filter((output) => output.type === "image_generation_call")
+                //     .map((output) => output.result);
 
-                console.log("Image Data: ", imageData);
 
-                if (imageData.length > 0) {
-                    const imageBase64 = imageData[0];
-                    // console.log("Image Base64: ", imageBase64);
-                    const fs = await import("fs");
-                    fs.writeFileSync("image.png", imageBase64, "base64");
+                // if (imageData.length > 0) {
+                //     const imageBase64 = imageData[0];
+                //     console.log("Image Base64: ", imageBase64);
 
-                    imageUrl = `data:image/png;base64,${imageBase64}`;
-                    // console.log("Image saved to image.png", imageUrl);
-                }
+                //     const fs = await import("fs");
+                //     console.log("fs:", fs);
+
+                //     fs.writeFileSync("image.png", imageBase64, "base64");
+                //     console.log(fs.writeFileSync("image.png", imageBase64, "base64"));
+
+                //     imageUrl = `data:image/png;base64,${imageBase64}`;
+                //     console.log("Image saved to image.png", imageUrl);
+                // }
 
             } else {
-                toast.error('Error: Description is too long. Please enter a description with 3 words or less.');
+                toast.error('Error: Description is too long. Please enter a description with 3 words or less. The translation will still render though');
             }
 
             const response = await openai.chat.completions.create({
@@ -139,21 +155,6 @@ function StretchGoal() {
             });
 
             console.log("Response: ", response);
-
-            // if (!response.ok) {
-            //     if (response.status === 401) {
-            //         toast.error('Error 401: Unauthorized. Please check your API key.');
-            //     } else if (response.status === 400) {
-            //         toast.error('Error 400: Bad Request. Please check your request parameters.');
-            //     } else if (response.status === 500) {
-            //         toast.error('Error 500: Internal Server Error. Please try again later.');
-            //     } else if (response.status === 402) {
-            //         toast.error('"Insufficient credits. This account never purchased credits. Make sure your key is on the correct account or org, and if so, purchase more at https://openrouter.ai/settings/credits');
-            //     } else {
-            //         toast.error('An error occurred during translation.');
-            //     }
-            //     return;
-            // }
 
             // Extract the translated text from the response
             if (response) {
@@ -210,14 +211,14 @@ function StretchGoal() {
                                         : 'bg-[#005999] text-white')} p-4 rounded-xl max-w-[80%] shadow-md`
                             }>
                                 <p className="font-bold text-lg">{msg.text}</p>
-                                {/* {msg.image && (
+                                {msg.image && (
                                     <div className="mt-3">
                                         <img
                                             src={msg.image}
                                             alt="Generated-image"
                                             className="rounded-lg shadow-sm border border-black/10 w-1/4 max-[520px]:w-3/4" />
                                     </div>
-                                )} */}
+                                )}
                             </div>
                         </div>
                     ))}
